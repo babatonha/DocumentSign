@@ -1,0 +1,19 @@
+<dx-popup maxWidth="500px" maxHeight="98vh" height="auto" overflow="auto" dragEnabled="true"
+  [(visible)]="isMessagePopupVisible" [(title)]="messageTitle">
+  <div>
+    <div class="dialogIcon" style="float:left;">
+      <div class="information-icon" *ngIf="showInformationIcon"></div>
+      <div class="error-icon" *ngIf="showWarningIcon"></div>
+    </div>
+      <span>
+        <p> {{ message }}</p>    
+      </span>
+  </div>
+  <br>
+  <dx-toolbar>
+    <dxi-item widget="dxButton" locateInMenu="auto" location="after">
+      <dx-button (click)="closeMessageClick()" type="default" width="100" height="30" text="OK">
+      </dx-button>
+    </dxi-item>
+  </dx-toolbar>
+</dx-popup>

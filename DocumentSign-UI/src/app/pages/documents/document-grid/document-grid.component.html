@@ -1,0 +1,76 @@
+<div style="padding:0">
+  <dx-form labelLocation="left" colCount="1">
+    <dxi-item itemType="group">
+      <dx-tab-panel [animationEnabled]="true" [focusStateEnabled]="false" height="84vh">
+        <dxi-item text="Documents" icon="file" title="My Documents">
+          <dx-data-grid [dataSource]="documentDataSource" height="75vh" [columnAutoWidth]="true" [showColumnLines]="false"
+            [rowAlternationEnabled]="true" [wordWrapEnabled]="true" [showBorders]="false" [showColumnLines]="true" [showRowLines]="true"
+            (onToolbarPreparing)="documentOnToolbarPreparing($event)" [(selectedRowKeys)]="selectedRecords" [allowColumnReordering]="true">
+            <dxo-search-panel [visible]="true" width="150"></dxo-search-panel>
+            <dxo-column-chooser [enabled]="true"></dxo-column-chooser>
+            <dxi-column caption="Document Id" dataField="DocumentId" [visible]="true" width="100"></dxi-column>
+            <dxi-column caption="Document Name" dataField="DocumentName"></dxi-column>
+            <dxi-column caption="Uploaded By" dataField="UploaderFullName"></dxi-column>
+            <dxi-column caption="DateUploaded" dataField="DateUploaded" dataType="date" format="yyyy/MM/dd HH:mm ss"></dxi-column>
+            <dxo-filter-row [visible]="true"></dxo-filter-row>
+            <dxo-selection mode="single"></dxo-selection>
+            <dxo-export [enabled]="true" fileName="ManagerRepresentatives"></dxo-export>
+            <dxo-pager [showPageSizeSelector]="true"  [allowedPageSizes]="[5, 10, 20]"  [visible]="true" [showInfo]="true"></dxo-pager>
+          </dx-data-grid>
+        </dxi-item>
+      </dx-tab-panel>
+    </dxi-item>
+  </dx-form>
+</div>
+
+
+<!--Popup Add Document-->
+<dx-popup width="600" height="auto" overflow="auto" dragEnabled="true" [resizeEnabled]="true" maxWidth="90%"
+  [(visible)]="isNewDcoumentPopupVisible" title="Upload Document">
+  <dxi-item height="100px">
+
+    <div id="form-container">
+      <dx-form id="form" [colCount]="1">
+        <dxi-item>
+          <div style="color:red;">NB** Please do not upload password encrypted files. 
+            If you download a file directly from your bank app please open it and "Save As" a different name before uploading it.</div>
+        </dxi-item>
+      </dx-form>
+    </div>
+
+    <br>
+
+    <dxi-item [label]="{text:'Attachment'}" [disabled]="isChooseDocumentDisabled" style="margin-bottom: 10px;">
+      <dx-box direction="row" width="100%">
+        <dxi-item [ratio]="0.4">
+          <input name="fileUpload" #invoiceDocumentsInput id="invoiceDocumentsInput" type="file" (change)="getDocuments($event)"
+          style="display:none;" accept="application/pdf" />
+         <label class="labelStyle" for="invoiceDocumentsInput" title="Click to select file(s)">Browse</label>
+        </dxi-item>
+        <dxi-item [ratio]="3.6">
+          <p>{{lblInvoiceAttachment}}</p>  
+        </dxi-item>
+      </dx-box>
+    </dxi-item>
+
+    <hr style="border-top: 1px solid #ccc; background: transparent;">
+    <dx-toolbar style="margin-top:5px">
+      <dxi-item widget="dxButton" locateInMenu="auto" location="after">
+        <dx-button (click)="uploadClick()" type="default" width="100" height="25" text="Submit"
+          icon="arrowup">
+        </dx-button>
+      </dxi-item>
+      <dxi-item widget="dxButton" locateInMenu="auto" location="after">
+        <dx-button (click)="cancelCloseClick()" type="default" width="100" height="25" text="Cancel"
+          icon="close">
+        </dx-button>
+      </dxi-item>
+    </dx-toolbar>
+  </dxi-item>
+
+  <br>
+</dx-popup>
+
+<app-message-dialog></app-message-dialog>
+<app-processing-dialog></app-processing-dialog>
+<app-confirm-dialog (confirmClick)="confirmClick()"> </app-confirm-dialog>

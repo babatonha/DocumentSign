@@ -1,0 +1,23 @@
+::ng-deep .information-icon {
+    height: 35px;
+    width: 35px;
+    margin-left: 5px;
+    margin-right: 5px;
+    margin-top: 5px;
+    background-image: url('../../images//information-icon.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+::ng-deep .error-icon {
+    height: 35px;
+    width: 35px;
+    margin-left: 5px;
+    margin-right: 5px;
+    margin-top: 5px;
+    background-image: url('../../images//error-icon.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}

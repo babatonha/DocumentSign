@@ -1,0 +1,248 @@
+<h2 class="content-block">Profile</h2>
+
+
+<div class="content-block dx-card responsive-paddings">
+   <dx-form labelLocation="left" [formData]="userProfile"  colCount="2">
+    <dxi-item itemType="group" colCount="1" caption="General">
+
+       <dxi-item dataField="FirstName" editorType="dxTextBox" [editorOptions]="{ stylingMode: 'filled', placeholder: 'Name'}">
+        <dxi-validation-rule type="required" message="First Name is required"></dxi-validation-rule>
+      </dxi-item>
+      <dxi-item dataField="LastName" editorType="dxTextBox" [editorOptions]="{ stylingMode: 'filled', placeholder: 'Surname'}">
+        <dxi-validation-rule type="required" message="Last Name is required"></dxi-validation-rule>
+      </dxi-item>
+      
+      <dxi-item dataField="Email" editorType="dxTextBox" [editorOptions]="{ stylingMode: 'filled', placeholder: 'Email'}">
+        <dxi-validation-rule type="email" message="Email is required"></dxi-validation-rule>  
+      </dxi-item>
+
+      <dxi-item dataField="PhoneNumber" editorType="dxTextBox" [editorOptions]="{ stylingMode: 'filled', placeholder: 'Phone Number'}">
+        <dxi-validation-rule type="required" message="Phone Number is required"></dxi-validation-rule>  
+      </dxi-item>
+
+
+     <dxi-item [label]="{text:'Manage'}" style="margin-bottom: 10px;">
+
+      <dx-box direction="row" width="100%">
+
+        <dxi-item widget="dxButton" [ratio]="1" [label]="{text:'Signature'}" locateInMenu="auto" location="after">
+          <dx-button (click)="signatureClick()" type="default" icon="background"  height="25" text="Signature ({{signatureExists}})">
+          </dx-button>
+        </dxi-item>
+
+        <dxi-item  [ratio]="1">
+          <dx-button style="display: inline-block;margin-left: 1%" (click)="uploadNewPictureSignature()" type="default" icon="rename" height="25" text="Picture Signature"></dx-button>
+        </dxi-item>
+
+        <dxi-item widget="dxButton" [ratio]="1.8" [label]="{text:'Manage Signature'}" locateInMenu="auto" location="after">
+          <!-- <dx-button (click)="openBankingDetailsClick()" type="default" icon="money"  height="25" text="Banking Details">
+          </dx-button> -->
+          <!-- <dx-button (click)="openBankingDetailsClick()" [visible]="isLeaveButtonVisible" type="default" icon="info"  height="25" text="Leave Details">
+          </dx-button> -->
+        </dxi-item>
+      </dx-box>
+    </dxi-item>
+
+   <dxi-item>
+    <hr style="border-top: 1px solid #ccc; background: transparent;">
+   </dxi-item>
+   <dxi-item widget="dxButton" locateInMenu="auto" location="after">
+    <dx-button style="display: inline-block; margin-right: 1%;" (click)="SaveProfileDetailsClick()" type="default" icon="save" height="25" text="Save All Changes"></dx-button>
+    <dx-button style="display: inline-block; margin-right: 1%;" [visible]="isUploadUserManualVisible" (click)="uploadUserManualClick()" type="default" icon="arrowup" height="25" text="Upload User Manual"></dx-button>
+    <dx-button style="display: inline-block; margin-right: 1%;" [visible]="isUploadUserManualVisible" (click)="updateColidatedFileClick()" type="default" icon="preferences" height="25" text="Update User Consilidated File"></dx-button>
+    <dx-button style="display: inline-block;" [visible]="isUploadUserManualVisible" (click)="uploadNewPictureSignature()" type="default" icon="rename" height="25" text="Picture Signature"></dx-button>
+  </dxi-item>
+
+
+    </dxi-item>
+
+    <dxi-item itemType="group" colCount="1" caption="My Departments">
+      <dx-data-grid [dataSource]="userDepartmentsDataSource" height="240" [columnAutoWidth]="true" [showColumnLines]="false"
+        [rowAlternationEnabled]="true" [wordWrapEnabled]="true" [showBorders]="true" [showColumnLines]="true" [showRowLines]="true"
+        (onToolbarPreparing)="onToolbarPreparing($event)" [(selectedRowKeys)]="selectedRecords" [allowColumnReordering]="true">
+       
+        <dxi-column caption="ID" dataField="ID" [visible]="false"></dxi-column>
+        <dxi-column caption="Department" dataField="DepartmentName"></dxi-column>
+        <dxi-column caption="Company" dataField="CompanyName"></dxi-column>
+        <!-- <dxo-filter-row [visible]="true"></dxo-filter-row> -->
+        <dxo-selection mode="single"></dxo-selection>
+        <!-- <dxo-export [enabled]="true" fileName="UserDepartments"></dxo-export> -->
+        <dxo-pager [showPageSizeSelector]="true"  [allowedPageSizes]="[5, 10, 20]"  [visible]="true" [showInfo]="true"></dxo-pager>
+      </dx-data-grid>
+    </dxi-item>
+  </dx-form>
+
+</div>
+
+
+<dx-popup width="600" height="auto" overflow="auto" dragEnabled="true" [resizeEnabled]="true" 
+  [(visible)]="isSignaturePopupVisible" title="Signature Pad">
+  <dx-scroll-view width="100%" height="100%">
+  <div style="padding:5px">
+    
+    <dx-form labelLocation="left" colCount="1">
+      <dxi-item>
+
+        <div class="signature-container">
+          <signature-pad [options]="signaturePadOptions" (onBeginEvent)="drawStart()" 
+          (onEndEvent)="drawComplete()"></signature-pad>
+        </div>
+      
+        <!-- <div class="signature-image" *ngIf="signatureImg">
+          <img src='{{ signatureImg }}' />
+        </div> -->
+
+      </dxi-item>
+    </dx-form>
+ 
+    <hr style="border-top: 1px solid #ccc; background: transparent;">
+    <dx-toolbar style="margin-top:5px">
+
+      <dxi-item widget="dxButton" locateInMenu="auto" location="after">
+        <dx-button (click)="clearSignaturePad()" type="default" width="auto" height="25" text="Clear Signature"
+        icon="clear"></dx-button>
+      </dxi-item>
+
+      <dxi-item widget="dxButton" locateInMenu="auto" location="after">
+        <dx-button (click)="saveSignatureClick()" type="default" width="100" height="25" text="Apply"
+          icon="save">
+        </dx-button>
+      </dxi-item>
+
+      <dxi-item widget="dxButton" locateInMenu="auto" location="after">
+        <dx-button (click)="CloseSignatureClick()" type="default" width="100" height="25" text="Close"
+          icon="close">
+        </dx-button>
+      </dxi-item>
+    </dx-toolbar>
+
+  </div>
+</dx-scroll-view>
+</dx-popup>
+
+<dx-popup width="600" height="auto" overflow="auto" dragEnabled="true" [resizeEnabled]="true" 
+  [(visible)]="isAvailSigPopupVisible" title="Available Signature">
+  <dx-scroll-view width="100%" height="100%">
+  <div style="padding:5px">
+    
+    <dx-form labelLocation="left" colCount="1">
+      <dxi-item>
+        <div class="signature-image" >
+          <img src='{{ signatureImg }}' />
+        </div>
+      </dxi-item>
+    </dx-form>
+ 
+    <hr style="border-top: 1px solid #ccc; background: transparent;">
+    <dx-toolbar style="margin-top:5px">
+
+      <dxi-item widget="dxButton" locateInMenu="auto" location="after">
+        <dx-button (click)="changeSignatureClick()" type="default" width="100" height="25" text="Change"
+          icon="edit">
+        </dx-button>
+      </dxi-item>
+      <dxi-item widget="dxButton" locateInMenu="auto" location="after">
+        <dx-button (click)="changeCloseSignatureClick()" type="default" width="100" height="25" text="Close"
+          icon="close">
+        </dx-button>
+      </dxi-item>
+    </dx-toolbar>
+  </div>
+</dx-scroll-view>
+</dx-popup>
+
+
+<dx-popup width="600" height="auto" overflow="auto" dragEnabled="true" [resizeEnabled]="true" 
+  [(visible)]="isPopupUserDepartmentVisible" title="Save Department">
+  <dx-scroll-view width="100%" height="100%">
+  <div style="padding:5px">
+    
+    <dx-form labelLocation="left" colCount="1" [(formData)]="userDepartment">
+      <dxi-item itemType="group" caption="Details">
+        <dxi-item dataField="DepartmentId" [label]="{text:'Department'}" editorType="dxLookup" 
+        [editorOptions]="{stylingMode: 'filled', placeholder:'Select Department', dataSource: departmentsDataSource, valueExpr: 'DepartmentId',
+         displayExpr: 'Name', closeOnOutsideClick:'true'}">
+         <dxi-validation-rule type="required" message="DepartmentID is required"></dxi-validation-rule>
+         
+       </dxi-item>
+      </dxi-item>
+    </dx-form>
+ 
+    <hr style="border-top: 1px solid #ccc; background: transparent;">
+    <dx-toolbar style="margin-top:5px">
+      <dxi-item widget="dxButton" locateInMenu="auto" location="after">
+        <dx-button (click)="saveUserDepartmentClick()" type="default" width="100" height="25" text="Save"
+          icon="save">
+        </dx-button>
+      </dxi-item>
+      <dxi-item widget="dxButton" locateInMenu="auto" location="after">
+        <dx-button (click)="CloseUserDepartmentClick()" type="default" width="100" height="25" text="Close"
+          icon="close">
+        </dx-button>
+      </dxi-item>
+    </dx-toolbar>
+
+  </div>
+</dx-scroll-view>
+</dx-popup>
+
+
+<!--Popup Upload Picture signature-->
+<dx-popup width="600" height="auto" overflow="auto" dragEnabled="true" [resizeEnabled]="true" maxWidth="90%"
+  [(visible)]="isupLoadPictureSignaturePopupVisible" title="Add Image Signature">
+  <dxi-item height="100px">
+
+    <dxi-item [label]="{text:'Attachment'}" style="margin-bottom: 10px;">
+      <dx-box direction="row" width="100%">
+        <dxi-item [ratio]="0.4">
+          <input name="fileUpload" #signaturePictureDocumentsInput id="signaturePictureDocumentsInput" type="file" (change)="getPictureSignatureDocuments($event)"
+          style="display:none;" accept="*" />
+         <label class="labelStyle" for="signaturePictureDocumentsInput" title="Click to select file(s)">Browse</label>
+        </dxi-item>
+        <dxi-item [ratio]="3.6">
+          <p>{{lblPictureSignatureAttachment}}</p>  
+        </dxi-item>
+      </dx-box>
+    </dxi-item>
+  </dxi-item>
+
+  <br>
+    <hr style="border-top: 1px solid #ccc; background: transparent;">
+  <dx-toolbar style="margin-top:5px">
+    <dxi-item widget="dxButton" locateInMenu="auto" location="after">
+      <dx-button type="default" (click)="savePictureSignatureDocuments()" width="100" height="25" text="Save" icon="save">
+      </dx-button>
+    </dxi-item>
+  </dx-toolbar>
+</dx-popup>
+
+
+
+<dx-popup width="600" height="auto" overflow="auto" dragEnabled="true" [resizeEnabled]="true" 
+  [(visible)]="isRefreshBrowserPopupVisible" title="Refresh Browser">
+  <dx-scroll-view width="100%" height="100%">
+  <div style="padding:5px">
+    
+    <dx-form labelLocation="left" colCount="1" >
+      <dxi-item >
+        <p>Please note, this system has been updated. To ensure you are using the latest version please press CTRL and F5 at the same time, after clicking the refresh browser button below</p>
+      </dxi-item>
+    </dx-form>
+ 
+    <hr style="border-top: 1px solid #ccc; background: transparent;">
+    <dx-toolbar style="margin-top:5px">
+      <dxi-item widget="dxButton" locateInMenu="auto" location="after">
+        <dx-button (click)="refreshBrowserClick()" type="default"  height="25" text="Refresh Browser"
+          icon="refresh">
+        </dx-button>
+      </dxi-item>
+    </dx-toolbar>
+
+  </div>
+</dx-scroll-view>
+</dx-popup>
+
+
+<app-message-dialog></app-message-dialog>
+<app-processing-dialog></app-processing-dialog>
+<app-confirm-dialog (confirmClick)="confirmClick()"> </app-confirm-dialog>
